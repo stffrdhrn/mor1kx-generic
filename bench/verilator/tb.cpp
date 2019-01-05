@@ -86,7 +86,7 @@ int main(int argc, char **argv, char **env)
 
 	Vorpsoc_top* top = new Vorpsoc_top;
 	VerilatorTbUtils* tbUtils =
-		new VerilatorTbUtils(top->v->wb_bfm_memory0->ram0->mem);
+		new VerilatorTbUtils(top->orpsoc_top->wb_bfm_memory0->ram0->mem);
 
 	parse_args(argc, argv, tbUtils);
 
@@ -107,8 +107,8 @@ int main(int argc, char **argv, char **env)
 
 		tbUtils->doJTAG(&top->tms_pad_i, &top->tdi_pad_i, &top->tck_pad_i, top->tdo_pad_o);
 
-		insn = top->v->mor1kx0->mor1kx_cpu->monitor_execute_insn;
-		ex_pc = top->v->mor1kx0->mor1kx_cpu->monitor_execute_pc;
+		insn = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_insn;
+		ex_pc = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_pc;
 
 		if (insn == (0x15000000 | NOP_EXIT) || insn == (0x15000000 | NOP_EXIT_SILENT)) {
 			printf("Success! Got NOP_EXIT. Exiting (%lu)\n",

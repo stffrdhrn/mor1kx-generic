@@ -97,6 +97,17 @@ adbg_top dbg_if0 (
 	.cpu0_stall_o	(or1k_dbg_stall_i),
 	.cpu0_bp_i	(or1k_dbg_bp_o),
 
+	.cpu1_clk_i	(wb_clk),
+	.cpu1_rst_o	(),
+	.cpu1_addr_o	(),
+	.cpu1_data_o	(),
+	.cpu1_stb_o	(),
+	.cpu1_we_o	(),
+	.cpu1_data_i	(32'd0),
+	.cpu1_ack_i	(1'b0),
+	.cpu1_stall_o	(),
+	.cpu1_bp_i	(1'b0),
+
 	// TAP interface
 	.tck_i		(tck_pad_i),
 	.tdi_i		(jtag_tap_tdo),
@@ -110,6 +121,7 @@ adbg_top dbg_if0 (
 
 	// Wishbone debug master
 	.wb_clk_i	(wb_clk),
+	.wb_rst_i	(wb_rst),
 	.wb_dat_i	(wb_s2m_dbg_dat),
 	.wb_ack_i	(wb_s2m_dbg_ack),
 	.wb_err_i	(wb_s2m_dbg_err),
@@ -120,8 +132,24 @@ adbg_top dbg_if0 (
 	.wb_stb_o	(wb_m2s_dbg_stb),
 	.wb_sel_o	(wb_m2s_dbg_sel),
 	.wb_we_o	(wb_m2s_dbg_we),
+	.wb_cab_o       (),
 	.wb_cti_o	(wb_m2s_dbg_cti),
-	.wb_bte_o	(wb_m2s_dbg_bte)
+	.wb_bte_o	(wb_m2s_dbg_bte),
+
+	.wb_jsp_adr_i (32'd0),
+	.wb_jsp_dat_i (32'd0),
+	.wb_jsp_cyc_i (1'b0),
+	.wb_jsp_stb_i (1'b0),
+	.wb_jsp_sel_i (4'h0),
+	.wb_jsp_we_i  (1'b0),
+	.wb_jsp_cab_i (1'b0),
+	.wb_jsp_cti_i (3'd0),
+	.wb_jsp_bte_i (2'd0),
+	.wb_jsp_dat_o (),
+	.wb_jsp_ack_o (),
+	.wb_jsp_err_o (),
+
+	.int_o ()
 );
 
 ////////////////////////////////////////////////////////////////////////
@@ -140,6 +168,7 @@ assign or1k_rst = wb_rst | or1k_dbg_rst;
 mor1kx #(
 	.FEATURE_DEBUGUNIT		("ENABLED"),
 	.FEATURE_CMOV			("ENABLED"),
+	.FEATURE_EXT			("ENABLED"),
 	.FEATURE_INSTRUCTIONCACHE	("ENABLED"),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),
@@ -256,6 +285,28 @@ uart_top #(
    assign wb_s2m_uart_err = 1'b0;
    assign wb_s2m_uart_rty = 1'b0;
 
+// Interupt Generator
+
+wire intgen_irq;
+
+intgen intgen0 (
+	//Wishbone Master interface
+	.clk_i		(wb_clk_i),
+	.rst_i		(wb_rst_i),
+	.wb_adr_i	(wb_m2s_intgen_adr[0]),
+	.wb_dat_i	(wb_m2s_intgen_dat),
+	.wb_we_i	(wb_m2s_intgen_we),
+	.wb_cyc_i	(wb_m2s_intgen_cyc),
+	.wb_stb_i	(wb_m2s_intgen_stb),
+	.wb_dat_o	(wb_s2m_intgen_dat),
+	.wb_ack_o	(wb_s2m_intgen_ack),
+
+	.irq_o		(intgen_irq)
+);
+
+   assign wb_s2m_intgen_err = 1'b0;
+   assign wb_s2m_intgen_rty = 1'b0;
+
 ////////////////////////////////////////////////////////////////////////
 //
 // CPU Interrupt assignments
@@ -280,7 +331,7 @@ assign or1k_irq[15] = 0;
 assign or1k_irq[16] = 0;
 assign or1k_irq[17] = 0;
 assign or1k_irq[18] = 0;
-assign or1k_irq[19] = 0;
+assign or1k_irq[19] = intgen_irq;
 assign or1k_irq[20] = 0;
 assign or1k_irq[21] = 0;
 assign or1k_irq[22] = 0;
@@ -292,5 +343,6 @@ assign or1k_irq[27] = 0;
 assign or1k_irq[28] = 0;
 assign or1k_irq[29] = 0;
 assign or1k_irq[30] = 0;
+assign or1k_irq[31] = 0;
 
 endmodule
