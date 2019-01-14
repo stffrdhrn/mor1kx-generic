@@ -1,5 +1,6 @@
 module orpsoc_top
-  #(parameter MEM_SIZE = 32'h02000000)
+  #(parameter MEM_SIZE = 32'h02000000,
+    parameter pipeline = "CAPPUCCINO")
 (
 		input wb_clk_i,
 		input wb_rst_i,
@@ -11,6 +12,7 @@ module orpsoc_top
 
 localparam wb_aw = 32;
 localparam wb_dw = 32;
+
 
 ////////////////////////////////////////////////////////////////////////
 //
@@ -181,10 +183,10 @@ mor1kx #(
 	.OPTION_DCACHE_WAYS		(2),
 	.OPTION_DCACHE_LIMIT_WIDTH	(31),
 	.FEATURE_DMMU			("ENABLED"),
-	.OPTION_RF_NUM_SHADOW_GPR	(1),
+	.OPTION_RF_NUM_SHADOW_GPR	(0),
 	.IBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
 	.DBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
-	.OPTION_CPU0			("CAPPUCCINO"),
+	.OPTION_CPU0			(pipeline),
 	.OPTION_RESET_PC		(32'h00000100)
 ) mor1kx0 (
 	.iwbm_adr_o			(wb_m2s_or1k_i_adr),

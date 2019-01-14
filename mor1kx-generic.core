@@ -19,8 +19,8 @@ src_files =
 tb_private_src_files =
  bench/verilog/orpsoc_tb.v
 include_files =
- rtl/verilog/wb_intercon.vh
  bench/verilog/include/test-defines.v
+ rtl/verilog/wb_intercon.vh
 
 [icarus]
 depend = elf-loader >=jtag_vpi-r2 >=vlog_tb_utils-1.0
@@ -42,4 +42,10 @@ top_module    = orpsoc_top
 datatype    = bool
 description = Preset RAM to a known value (0)
 paramtype   = plusarg
+scope       = private
+
+[parameter pipeline]
+datatype    = str
+description = Mor1kx pipeline to use CAPPUCCINO, ESPRESSO, PRONTOESPRESSO
+paramtype   = vlogparam
 scope       = private

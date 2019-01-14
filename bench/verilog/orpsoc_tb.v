@@ -1,4 +1,4 @@
-module orpsoc_tb;
+module orpsoc_tb #(parameter pipeline = "CAPPUCCINO");
 
    localparam MEM_SIZE = 32'h02000000; //Set default memory size to 32MB
 
@@ -81,7 +81,8 @@ module orpsoc_tb;
    //
    ////////////////////////////////////////////////////////////////////////
    orpsoc_top
-     #(.MEM_SIZE (MEM_SIZE))
+     #(.MEM_SIZE (MEM_SIZE),
+       .pipeline (pipeline))
    dut
      (.wb_clk_i (syst_clk),
       .wb_rst_i (syst_rst),
