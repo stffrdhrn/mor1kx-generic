@@ -167,6 +167,73 @@ wire		or1k_rst;
 assign or1k_clk = wb_clk;
 assign or1k_rst = wb_rst | or1k_dbg_rst;
 
+generate
+if (pipeline=="MAROCCHINO") begin : gencpu
+mor1kx_top_marocchino #(
+	.FEATURE_DEBUGUNIT		("ENABLED"),
+	.OPTION_ICACHE_BLOCK_WIDTH	(5),
+	.OPTION_ICACHE_SET_WIDTH	(8),
+	.OPTION_ICACHE_WAYS		(2),
+	.OPTION_ICACHE_LIMIT_WIDTH	(32),
+	.OPTION_DCACHE_BLOCK_WIDTH	(5),
+	.OPTION_DCACHE_SET_WIDTH	(8),
+	.OPTION_DCACHE_WAYS		(2),
+	.OPTION_DCACHE_LIMIT_WIDTH	(31),
+	.OPTION_RF_NUM_SHADOW_GPR	(0),
+	.IBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
+	.DBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
+	.OPTION_RESET_PC		(32'h00000100)
+) mor1kx0 (
+	.iwbm_adr_o			(wb_m2s_or1k_i_adr),
+	.iwbm_stb_o			(wb_m2s_or1k_i_stb),
+	.iwbm_cyc_o			(wb_m2s_or1k_i_cyc),
+	.iwbm_sel_o			(wb_m2s_or1k_i_sel),
+	.iwbm_we_o			(wb_m2s_or1k_i_we),
+	.iwbm_cti_o			(wb_m2s_or1k_i_cti),
+	.iwbm_bte_o			(wb_m2s_or1k_i_bte),
+	.iwbm_dat_o			(wb_m2s_or1k_i_dat),
+
+	.dwbm_adr_o			(wb_m2s_or1k_d_adr),
+	.dwbm_stb_o			(wb_m2s_or1k_d_stb),
+	.dwbm_cyc_o			(wb_m2s_or1k_d_cyc),
+	.dwbm_sel_o			(wb_m2s_or1k_d_sel),
+	.dwbm_we_o			(wb_m2s_or1k_d_we ),
+	.dwbm_cti_o			(wb_m2s_or1k_d_cti),
+	.dwbm_bte_o			(wb_m2s_or1k_d_bte),
+	.dwbm_dat_o			(wb_m2s_or1k_d_dat),
+
+	.wb_clk				(wb_clk),
+	.wb_rst				(wb_rst),
+	.cpu_clk			(or1k_clk),
+	.cpu_rst			(or1k_rst),
+
+	.iwbm_err_i			(wb_s2m_or1k_i_err),
+	.iwbm_ack_i			(wb_s2m_or1k_i_ack),
+	.iwbm_dat_i			(wb_s2m_or1k_i_dat),
+	.iwbm_rty_i			(wb_s2m_or1k_i_rty),
+
+	.dwbm_err_i			(wb_s2m_or1k_d_err),
+	.dwbm_ack_i			(wb_s2m_or1k_d_ack),
+	.dwbm_dat_i			(wb_s2m_or1k_d_dat),
+	.dwbm_rty_i			(wb_s2m_or1k_d_rty),
+
+	.irq_i				(or1k_irq),
+
+	.du_addr_i			(or1k_dbg_adr_i[15:0]),
+	.du_stb_i			(or1k_dbg_stb_i),
+	.du_dat_i			(or1k_dbg_dat_i),
+	.du_we_i			(or1k_dbg_we_i),
+	.du_dat_o			(or1k_dbg_dat_o),
+	.du_ack_o			(or1k_dbg_ack_o),
+	.du_stall_i			(or1k_dbg_stall_i),
+	.multicore_coreid_i		(32'd0),
+	.multicore_numcores_i		(32'd1),
+	.snoop_adr_i			(32'd0),
+	.snoop_en_i			(1'b0)
+);
+end // if MAROCCHINO
+
+else begin : gencpu
 mor1kx #(
 	.FEATURE_DEBUGUNIT		("ENABLED"),
 	.FEATURE_CMOV			("ENABLED"),
@@ -231,6 +298,8 @@ mor1kx #(
 	.du_stall_i			(or1k_dbg_stall_i),
 	.du_stall_o			(or1k_dbg_bp_o)
 );
+end // else (not MAROCCHINO)
+endgenerate
 
 ////////////////////////////////////////////////////////////////////////
 //

@@ -1,5 +1,6 @@
 CAPI=1
 [main]
+name = ::mor1kx-generic:1.0
 description = "Minimal mor1kx simulation environment"
 depend =
  adv_debug_sys
