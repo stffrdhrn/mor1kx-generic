@@ -107,8 +107,8 @@ int main(int argc, char **argv, char **env)
 
 		tbUtils->doJTAG(&top->tms_pad_i, &top->tdi_pad_i, &top->tck_pad_i, top->tdo_pad_o);
 
-		insn = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_insn;
-		ex_pc = top->orpsoc_top->mor1kx0->mor1kx_cpu->monitor_execute_pc;
+		insn = top->orpsoc_top->gencpu__DOT__mor1kx0->mor1kx_cpu->monitor_execute_insn;
+		ex_pc = top->orpsoc_top->gencpu__DOT__mor1kx0->mor1kx_cpu->monitor_execute_pc;
 
 		if (insn == (0x15000000 | NOP_EXIT) || insn == (0x15000000 | NOP_EXIT_SILENT)) {
 			printf("Success! Got NOP_EXIT. Exiting (%lu)\n",
