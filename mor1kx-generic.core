@@ -50,3 +50,52 @@ datatype    = str
 description = Mor1kx pipeline to use CAPPUCCINO, ESPRESSO, PRONTOESPRESSO
 paramtype   = vlogparam
 scope       = private
+
+[parameter feature_immu]
+datatype    = str
+description = Instructure MMU selector, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_dmmu]
+datatype    = str
+description = Data MMU selector, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_instructioncache]
+datatype    = str
+description = Instructure cache selector, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_datacache]
+datatype    = str
+description = Data cache selector, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_debugunit]
+datatype    = str
+description = Enable debug unit, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_cmov]
+datatype    = str
+description = Enable cmov instructions, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter feature_ext]
+datatype    = str
+description = Enable sign extension instructions, use ENABLED, NONE
+paramtype   = vlogparam
+scope       = private
+
+[parameter option_rf_num_shadow_gpr]
+datatype    = int
+description = Specify number of shadow gprs, use 0-32
+paramtype   = vlogparam
+scope       = private
+

@@ -1,4 +1,14 @@
-module orpsoc_tb #(parameter pipeline = "CAPPUCCINO");
+module orpsoc_tb
+  #(parameter pipeline = "CAPPUCCINO",
+    parameter feature_immu = "ENABLED",
+    parameter feature_dmmu = "ENABLED",
+    parameter feature_instructioncache = "ENABLED",
+    parameter feature_datacache = "ENABLED",
+    parameter feature_debugunit = "ENABLED",
+    parameter feature_cmov = "ENABLED",
+    parameter feature_ext = "ENABLED",
+    parameter option_rf_num_shadow_gpr = 0
+   );
 
    localparam MEM_SIZE = 32'h02000000; //Set default memory size to 32MB
 
@@ -81,8 +91,17 @@ module orpsoc_tb #(parameter pipeline = "CAPPUCCINO");
    //
    ////////////////////////////////////////////////////////////////////////
    orpsoc_top
-     #(.MEM_SIZE (MEM_SIZE),
-       .pipeline (pipeline))
+     #(.MEM_SIZE                 (MEM_SIZE),
+       .pipeline                 (pipeline),
+       .feature_immu             (feature_immu),
+       .feature_dmmu             (feature_dmmu),
+       .feature_instructioncache (feature_instructioncache),
+       .feature_datacache        (feature_datacache),
+       .feature_debugunit        (feature_debugunit),
+       .feature_cmov             (feature_cmov),
+       .feature_ext              (feature_ext),
+       .option_rf_num_shadow_gpr (option_rf_num_shadow_gpr)
+      )
    dut
      (.wb_clk_i (syst_clk),
       .wb_rst_i (syst_rst),
