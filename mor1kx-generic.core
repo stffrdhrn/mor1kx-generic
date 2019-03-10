@@ -1,101 +1,155 @@
-CAPI=1
-[main]
-name = ::mor1kx-generic:1.0
-description = "Minimal mor1kx simulation environment"
-depend =
- adv_debug_sys
- >=jtag_tap-1.13
- mor1kx
- >=uart16550-1.5.4
- >=wb_intercon-1.0
- >=wb_ram-1.0
- intgen
+CAPI=2:
 
-simulators = icarus modelsim
+name : ::mor1kx-generic:1.1
+description : "Minimal mor1kx simulation environment"
 
-[verilog]
-src_files =
- rtl/verilog/orpsoc_top.v
- rtl/verilog/wb_intercon.v
-tb_private_src_files =
- bench/verilog/orpsoc_tb.v
-include_files =
- bench/verilog/include/test-defines.v
- rtl/verilog/wb_intercon.vh
+filesets:
+  mor1kx_modules:
+    depend:
+      - mor1kx
+  marocchino_modules:
+    depend:
+      - or1k_marocchino
 
-[icarus]
-depend = elf-loader >=jtag_vpi-r2 >=vlog_tb_utils-1.0
-iverilog_options = -DSIM
+  soc_files:
+    files:
+      - rtl/verilog/wb_intercon.vh : {is_include_file : true}
+      - rtl/verilog/orpsoc_top.v
+      - rtl/verilog/wb_intercon.v
+    file_type : verilogSource
+    depend:
+      - intgen
+      - adv_debug_sys
+      - ">=jtag_tap-1.13"
+      - ">=uart16550-1.5.4"
+      - ">=wb_intercon-1.0"
+      - ">=wb_ram-1.0"
+  verilog_tb_files:
+    files:
+      - bench/verilog/orpsoc_tb.v
+      - bench/verilog/include/test-defines.v : {is_include_file : true}
+    file_type : verilogSource
+    depend :
+      - elf-loader
+      - ">=jtag_vpi-r2"
+      - ">=vlog_tb_utils-1.0"
+  verilator_tb_files:
+    files:
+      - bench/verilator/tb.cpp : {file_type : cppSource}
+    depend :
+      - verilator_tb_utils
 
-[modelsim]
-depend = elf-loader >=jtag_vpi-r2 >=vlog_tb_utils-1.0
+targets:
+  mor1kx_tb:
+    default_tool : icarus
+    filesets : [soc_files, verilog_tb_files, mor1kx_modules]
+    parameters : [clear_ram, pipeline, feature_immu, feature_dmmu,
+                  feature_instructioncache, feature_datacache, feature_debugunit,
+                  feature_cmov, feature_ext, option_rf_num_shadow_gpr]
+    tools:
+      icarus:
+        iverilog_options : [-DICARUS_SIM, -DSIM, -DSPEEDSIM]
+      modelsim:
+        vlog_options : [+define+SIM, +define+MODELSIM_SIM, -timescale 1ns/1ps]
+        vsim_options : [-L, altera_mf_ver, -L, altera_mf]
+    toplevel : [orpsoc_tb]
 
-[rivierapro]
-depend = elf-loader >=jtag_vpi-r2 >=vlog_tb_utils-1.0
+  marocchino_tb:
+    default_tool : icarus
+    filesets : [soc_files, verilog_tb_files, marocchino_modules]
+    parameters: [clear_ram, pipeline=MAROCCHINO, feature_debugunit,
+                 option_rf_num_shadow_gpr]
+    tools:
+      icarus:
+        iverilog_options : [-DICARUS_SIM, -DSIM, -DSPEEDSIM]
+      modelsim:
+        vlog_options : [+define+SIM, +define+MODELSIM_SIM, -timescale 1ns/1ps]
+        vsim_options : [-L, altera_mf_ver, -L, altera_mf]
+    toplevel : [orpsoc_tb]
 
-[verilator]
-depend = verilator_tb_utils
-verilator_options = -Wno-fatal --trace
-tb_toplevel   = bench/verilator/tb.cpp
-top_module    = orpsoc_top
+  mor1kx_verilator_tb:
+    default_tool : verilator
+    filesets : [soc_files, verilator_tb_files, mor1kx_modules]
+    parameters : [clear_ram, pipeline, feature_immu, feature_dmmu,
+                  feature_instructioncache, feature_datacache, feature_debugunit,
+                  feature_cmov, feature_ext, option_rf_num_shadow_gpr]
+    tools:
+      verilator:
+        verilator_options : [-Wno-fatal, --trace]
+        cli_parser : true
+    toplevel : [orpsoc_top]
 
-[parameter clear_ram]
-datatype    = bool
-description = Preset RAM to a known value (0)
-paramtype   = plusarg
-scope       = private
 
-[parameter pipeline]
-datatype    = str
-description = Mor1kx pipeline to use CAPPUCCINO, ESPRESSO, PRONTOESPRESSO
-paramtype   = vlogparam
-scope       = private
+  marocchino_verilator_tb:
+    default_tool : verilator
+    filesets : [soc_files, verilator_tb_files, marocchino_modules]
+    parameters: [clear_ram, pipeline="MAROCCHINO", feature_debugunit,
+                 option_rf_num_shadow_gpr]
+    tools:
+      verilator:
+        verilator_options : [-Wno-fatal, --trace, "-CFLAGS -DMAROCCHINO",
+                             -Gpipeline=\"MAROCCHINO\"]
+        cli_parser : true
+    toplevel : [orpsoc_top]
 
-[parameter feature_immu]
-datatype    = str
-description = Instructure MMU selector, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
 
-[parameter feature_dmmu]
-datatype    = str
-description = Data MMU selector, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+parameters:
+  clear_ram:
+    datatype    : bool
+    description : Preset RAM to a known value (0)
+    paramtype   : plusarg
+    scope       : private
 
-[parameter feature_instructioncache]
-datatype    = str
-description = Instructure cache selector, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+  pipeline:
+    datatype    : str
+    description : Mor1kx pipeline to use CAPPUCCINO, ESPRESSO, PRONTOESPRESSO
+    paramtype   : vlogparam
+    scope       : private
 
-[parameter feature_datacache]
-datatype    = str
-description = Data cache selector, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+  feature_immu:
+    datatype    : str
+    description : Instructure MMU selector, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
 
-[parameter feature_debugunit]
-datatype    = str
-description = Enable debug unit, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+  feature_dmmu:
+    datatype    : str
+    description : Data MMU selector, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
 
-[parameter feature_cmov]
-datatype    = str
-description = Enable cmov instructions, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+  feature_instructioncache:
+    datatype    : str
+    description : Instructure cache selector, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
 
-[parameter feature_ext]
-datatype    = str
-description = Enable sign extension instructions, use ENABLED, NONE
-paramtype   = vlogparam
-scope       = private
+  feature_datacache:
+    datatype    : str
+    description : Data cache selector, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
 
-[parameter option_rf_num_shadow_gpr]
-datatype    = int
-description = Specify number of shadow gprs, use 0-32
-paramtype   = vlogparam
-scope       = private
+  feature_debugunit:
+    datatype    : str
+    description : Enable debug unit, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
 
+  feature_cmov:
+    datatype    : str
+    description : Enable cmov instructions, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
+
+  feature_ext:
+    datatype    : str
+    description : Enable sign extension instructions, use ENABLED, NONE
+    paramtype   : vlogparam
+    scope       : private
+
+  option_rf_num_shadow_gpr:
+    datatype    : int
+    description : Specify number of shadow gprs, use 0-32
+    paramtype   : vlogparam
+    scope       : private

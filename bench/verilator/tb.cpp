@@ -107,9 +107,13 @@ int main(int argc, char **argv, char **env)
 
 		tbUtils->doJTAG(&top->tms_pad_i, &top->tdi_pad_i, &top->tck_pad_i, top->tdo_pad_o);
 
+#ifdef MAROCCHINO
+		insn = top->orpsoc_top->gencpu__DOT__or1k_marocchino0->u_cpu->monitor_execute_insn;
+		ex_pc = top->orpsoc_top->gencpu__DOT__or1k_marocchino0->u_cpu->monitor_execute_pc;
+#else
 		insn = top->orpsoc_top->gencpu__DOT__mor1kx0->mor1kx_cpu->monitor_execute_insn;
 		ex_pc = top->orpsoc_top->gencpu__DOT__mor1kx0->mor1kx_cpu->monitor_execute_pc;
-
+#endif
 		if (insn == (0x15000000 | NOP_EXIT) || insn == (0x15000000 | NOP_EXIT_SILENT)) {
 			printf("Success! Got NOP_EXIT. Exiting (%lu)\n",
 			       tbUtils->getTime());

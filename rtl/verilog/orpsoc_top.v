@@ -178,23 +178,21 @@ assign or1k_rst = wb_rst | or1k_dbg_rst;
 
 generate
 if (pipeline=="MAROCCHINO") begin : gencpu
-mor1kx_top_marocchino #(
+or1k_marocchino_top #(
 	.FEATURE_DEBUGUNIT		(feature_debugunit),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),
 	.OPTION_ICACHE_WAYS		(2),
 	.OPTION_ICACHE_LIMIT_WIDTH	(32),
-	.OPTION_DCACHE_CLEAR_ON_INIT	(1),
+	.OPTION_ICACHE_CLEAR_ON_INIT	(1),
 	.OPTION_DCACHE_BLOCK_WIDTH	(5),
 	.OPTION_DCACHE_SET_WIDTH	(8),
 	.OPTION_DCACHE_WAYS		(2),
 	.OPTION_DCACHE_LIMIT_WIDTH	(31),
 	.OPTION_DCACHE_CLEAR_ON_INIT	(1),
-	.OPTION_RF_NUM_SHADOW_GPR	(0),
-	.IBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
-	.DBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
+	.OPTION_RF_NUM_SHADOW_GPR	(option_rf_num_shadow_gpr),
 	.OPTION_RESET_PC		(32'h00000100)
-) mor1kx0 (
+) or1k_marocchino0 (
 	.iwbm_adr_o			(wb_m2s_or1k_i_adr),
 	.iwbm_stb_o			(wb_m2s_or1k_i_stb),
 	.iwbm_cyc_o			(wb_m2s_or1k_i_cyc),

@@ -83,7 +83,15 @@ module orpsoc_tb
    // mor1kx monitor
    //
    ////////////////////////////////////////////////////////////////////////
-   mor1kx_monitor #(.LOG_DIR(".")) i_monitor();
+   generate
+     if (pipeline=="MAROCCHINO") begin : genmon
+       or1k_marocchino_monitor #(.LOG_DIR(".")) i_monitor();
+     end
+
+     else begin : genmon
+       mor1kx_monitor #(.LOG_DIR(".")) i_monitor();
+     end
+   endgenerate
 
    ////////////////////////////////////////////////////////////////////////
    //
