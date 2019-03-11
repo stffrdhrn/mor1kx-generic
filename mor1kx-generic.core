@@ -40,7 +40,7 @@ filesets:
       - verilator_tb_utils
 
 targets:
-  mor1kx_tb:
+  mor1kx_tb: &sim
     default_tool: icarus
     filesets:
       - soc_files
@@ -62,7 +62,6 @@ targets:
     toplevel:
       - "!tool_verilator ? (orpsoc_tb)"
       - "tool_verilator ? (orpsoc_top)"
-
 
   marocchino_tb:
     default_tool: icarus
@@ -86,6 +85,8 @@ targets:
     toplevel:
       - "!tool_verilator ? (orpsoc_tb)"
       - "tool_verilator ? (orpsoc_top)"
+
+  sim: *sim
 
 parameters:
   clear_ram:
