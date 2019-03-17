@@ -58,7 +58,14 @@ targets:
         vsim_options: [-L, altera_mf_ver, -L, altera_mf]
       verilator:
         verilator_options: [-Wno-fatal, --trace]
-        cli_parser: true
+        # Disable `cli_parser` option for now, 1 there is a bug in edalize that
+        # needs to get fixed otherwise this fails.  Also, 2 we need a more
+        # features in command line parsing for this to work.  For verilator we
+        # need the `pipeline` option to be send to the verilator builder, but
+        # the `elf-load` and `trace_enable` options should go to the simulator
+        # binary.  Currently this only supports all options go to the build
+        # stage `managed` or all options go to the simulator `raw`.
+        # cli_parser: managed
     toplevel:
       - "!tool_verilator ? (orpsoc_tb)"
       - "tool_verilator ? (orpsoc_top)"
@@ -81,7 +88,8 @@ targets:
       verilator:
         verilator_options: [-Wno-fatal, --trace, "-CFLAGS -DMAROCCHINO",
                              -Gpipeline=\"MAROCCHINO\"]
-        cli_parser: true
+        # Disable cli_parser see comment above.
+        # cli_parser: managed
     toplevel:
       - "!tool_verilator ? (orpsoc_tb)"
       - "tool_verilator ? (orpsoc_top)"
