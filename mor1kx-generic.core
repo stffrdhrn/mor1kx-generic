@@ -31,7 +31,7 @@ filesets:
     file_type: verilogSource
     depend:
       - elf-loader
-      - ">=jtag_vpi-r2"
+      - "=jtag_vpi-r2"
       - ">=vlog_tb_utils-1.0"
   verilator_tb_files:
     files:
