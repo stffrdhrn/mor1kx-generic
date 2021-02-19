@@ -10,7 +10,6 @@ filesets:
   marocchino_modules:
     depend:
       - or1k_marocchino
-
   soc_files:
     files:
       - rtl/verilog/wb_intercon.vh: {is_include_file: true}
@@ -30,8 +29,8 @@ filesets:
       - bench/verilog/include/test-defines.v: {is_include_file: true}
     file_type: verilogSource
     depend:
-      - elf-loader
-      - "=jtag_vpi-r2"
+      - ">=elf-loader-1.0.3"
+      - ">=jtag_vpi-r2"
       - ">=vlog_tb_utils-1.0"
   verilator_tb_files:
     files:
