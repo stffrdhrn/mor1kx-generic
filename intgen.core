@@ -1,0 +1,17 @@
+CAPI=2:
+
+name : ::intgen:0
+description : Interrupt Generator For testing Processors
+
+filesets:
+  rtl:
+    files: [intgen.v : {file_type : verilogSource}]
+
+targets:
+  default: {filesets : [rtl]}
+
+provider:
+  name    : github
+  user    : stffrdhrn
+  repo    : intgen
+  version : 198de93c53d6a9f397acafff0f5c2f475c296d18
