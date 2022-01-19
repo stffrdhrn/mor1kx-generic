@@ -325,7 +325,7 @@ wb_ram #(
 	//Wishbone Master interface
 	.wb_clk_i	(wb_clk_i),
 	.wb_rst_i	(wb_rst_i),
-	.wb_adr_i	(wb_m2s_mem_adr[$clog2(MEM_SIZE)-3:0]),
+	.wb_adr_i	(wb_m2s_mem_adr[$clog2(MEM_SIZE)-1:0]),
 	.wb_dat_i	(wb_m2s_mem_dat),
 	.wb_sel_i	(wb_m2s_mem_sel),
 	.wb_we_i	(wb_m2s_mem_we),
