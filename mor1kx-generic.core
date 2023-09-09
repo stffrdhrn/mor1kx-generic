@@ -46,7 +46,7 @@ targets:
       - mor1kx_modules
       - "!tool_verilator ? (verilog_tb_files)"
       - "tool_verilator ? (verilator_tb_files)"
-    parameters: [clear_ram, pipeline, feature_immu, feature_dmmu,
+    parameters: [clear_ram, pipeline, feature_immu, feature_dmmu, feature_fpu,
                   feature_instructioncache, feature_datacache, feature_debugunit,
                   feature_cmov, feature_ext, option_rf_num_shadow_gpr]
     tools:
@@ -76,7 +76,7 @@ targets:
       - marocchino_modules
       - "!tool_verilator ? (verilog_tb_files)"
       - "tool_verilator ? (verilator_tb_files)"
-    parameters: [clear_ram, pipeline=MAROCCHINO, feature_debugunit,
+    parameters: [clear_ram, pipeline=MAROCCHINO, feature_debugunit, feature_fpu,
                  option_rf_num_shadow_gpr]
     tools:
       icarus:
@@ -147,6 +147,12 @@ parameters:
   feature_ext:
     datatype   : str
     description: Enable sign extension instructions, use ENABLED, NONE
+    paramtype  : vlogparam
+    scope      : private
+
+  feature_fpu:
+    datatype   : str
+    description: Enable support for the 32-bit FPU, use ENABLED, NONE
     paramtype  : vlogparam
     scope      : private
 

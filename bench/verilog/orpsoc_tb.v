@@ -7,6 +7,7 @@ module orpsoc_tb
     parameter feature_debugunit = "ENABLED",
     parameter feature_cmov = "ENABLED",
     parameter feature_ext = "ENABLED",
+    parameter feature_fpu = "ENABLED",
     parameter option_rf_num_shadow_gpr = 0
    );
 
@@ -108,6 +109,7 @@ module orpsoc_tb
        .feature_debugunit        (feature_debugunit),
        .feature_cmov             (feature_cmov),
        .feature_ext              (feature_ext),
+       .feature_fpu              (feature_fpu),
        .option_rf_num_shadow_gpr (option_rf_num_shadow_gpr)
       )
    dut

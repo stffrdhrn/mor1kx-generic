@@ -8,6 +8,7 @@ module orpsoc_top
     parameter feature_debugunit = "ENABLED",
     parameter feature_cmov = "ENABLED",
     parameter feature_ext = "ENABLED",
+    parameter feature_fpu = "ENABLED",
     parameter option_rf_num_shadow_gpr = 0
    )
 (
@@ -180,6 +181,7 @@ generate
 if (pipeline=="MAROCCHINO") begin : gencpu
 or1k_marocchino_top #(
 	.FEATURE_DEBUGUNIT		(feature_debugunit),
+	.FEATURE_FPU			(feature_fpu),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),
 	.OPTION_ICACHE_WAYS		(2),
@@ -188,7 +190,7 @@ or1k_marocchino_top #(
 	.OPTION_IMMU_CLEAR_ON_INIT	(1),
 	.OPTION_DCACHE_BLOCK_WIDTH	(5),
 	.OPTION_DCACHE_SET_WIDTH	(8),
-	.OPTION_DCACHE_WAYS		(2),
+	.OPTION_DCACHE_WAYS		(1),
 	.OPTION_DCACHE_LIMIT_WIDTH	(31),
 	.OPTION_DCACHE_CLEAR_ON_INIT	(1),
 	.OPTION_DMMU_CLEAR_ON_INIT	(1),
@@ -251,6 +253,7 @@ mor1kx #(
 	.FEATURE_DEBUGUNIT		(feature_debugunit),
 	.FEATURE_CMOV			(feature_cmov),
 	.FEATURE_EXT			(feature_ext),
+	.FEATURE_FPU			(feature_fpu),
 	.FEATURE_INSTRUCTIONCACHE	(feature_instructioncache),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),
@@ -266,6 +269,8 @@ mor1kx #(
 	.OPTION_RF_NUM_SHADOW_GPR	(option_rf_num_shadow_gpr),
 	.IBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
 	.DBUS_WB_TYPE			("B3_REGISTERED_FEEDBACK"),
+	.FEATURE_PERFCOUNTERS		("ENABLED"),
+	.OPTION_PERFCOUNTERS_NUM	(3),
 	.OPTION_CPU0			(pipeline),
 	.OPTION_RESET_PC		(32'h00000100)
 ) mor1kx0 (
@@ -320,7 +325,7 @@ endgenerate
 //
 ////////////////////////////////////////////////////////////////////////
 wb_ram #(
-	.depth	(MEM_SIZE/4)
+	.depth	(MEM_SIZE)
 ) wb_bfm_memory0 (
 	//Wishbone Master interface
 	.wb_clk_i	(wb_clk_i),
