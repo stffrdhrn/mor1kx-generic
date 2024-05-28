@@ -181,7 +181,6 @@ generate
 if (pipeline=="MAROCCHINO") begin : gencpu
 or1k_marocchino_top #(
 	.FEATURE_DEBUGUNIT		(feature_debugunit),
-	.FEATURE_FPU			(feature_fpu),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),
 	.OPTION_ICACHE_WAYS		(2),
