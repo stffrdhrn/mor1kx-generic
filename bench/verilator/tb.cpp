@@ -86,7 +86,7 @@ int main(int argc, char **argv, char **env)
 
 	Vorpsoc_top* top = new Vorpsoc_top;
 	VerilatorTbUtils* tbUtils =
-		new VerilatorTbUtils(top->orpsoc_top->wb_bfm_memory0->ram0->mem);
+		new VerilatorTbUtils(top->orpsoc_top->wb_bfm_memory0->ram0->mem.data());
 
 	parse_args(argc, argv, tbUtils);
 
