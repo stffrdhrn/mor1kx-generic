@@ -62,7 +62,7 @@ fusesoc library add intgen https://github.com/stffrdhrn/intgen.git
 fusesoc library add elf-loader https://github.com/fusesoc/elf-loader.git
 fusesoc library add mor1kx-generic /tmp/openrisc/src/mor1kx-generic
 fusesoc library add or1k_marocchino /tmp/openrisc/src/or1k_marocchino
-fusesoc library add or1k_marocchino /tmp/openrisc/src/mor1kx
+fusesoc library add mor1kx /tmp/openrisc/src/mor1kx
 ```
 
 To verify the installation we can run:
@@ -102,7 +102,7 @@ fusesoc core show mor1kx-generic
 The `mor1kx-generic` fusesoc core is setup to be allow running
 verilog simulations using either:
 
- - [incarus verilog](https://steveicarus.github.io/iverilog/)
+ - [icarus verilog](https://steveicarus.github.io/iverilog/)
  - [verilator](https://www.veripool.org/verilator/)
  - [modelsim](https://en.wikipedia.org/wiki/ModelSim)
 
@@ -158,7 +158,7 @@ or1k-elf-gcc --version
 The below program is from Stafford's blog entry [Marocchino in Action](http://stffrdhrn.github.io/hardware/embedded/openrisc/2019/06/11/or1k_marocchino.html)
 it explains in more detail how this works.
 
-Create a source file `asm-openrisc.s` as follows:
+Create a source file `openrisc-asm.s` as follows:
 
 ```asm
 /* Exception vectors section.  */
@@ -233,14 +233,14 @@ or1k-elf-gcc -nostartfiles openrisc-asm.s -o openrisc-asm
 
 To run a program we have a few different options for example:
 
-**Running the Marocchino Core with Icatus backend**
+**Running the Marocchino Core with Icarus backend**
 
 ```
 fusesoc run --target marocchino_tb --tool icarus mor1kx-generic \
   --elf_load ./openrisc-asm --trace_enable --trace_to_screen --vcd
 ```
 
-**Running the Mork1x Core with Icatus backend**
+**Running the Mork1x Core with Icarus backend**
 
 ```
 fusesoc run --target mor1kx_tb --tool icarus mor1kx-generic \
@@ -255,6 +255,4 @@ fusesoc run --target mor1kx_tb --tool varilator mor1kx-generic \
 ```
 
 All combinations should work.  Please report any issues via github issues.
-
-
 
