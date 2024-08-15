@@ -253,6 +253,7 @@ mor1kx #(
 	.FEATURE_CMOV			(feature_cmov),
 	.FEATURE_EXT			(feature_ext),
 	.FEATURE_FPU			(feature_fpu),
+	.FEATURE_ROR			("ENABLED"),
 	.FEATURE_INSTRUCTIONCACHE	(feature_instructioncache),
 	.OPTION_ICACHE_BLOCK_WIDTH	(5),
 	.OPTION_ICACHE_SET_WIDTH	(8),

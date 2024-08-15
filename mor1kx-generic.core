@@ -56,7 +56,7 @@ targets:
         vlog_options: [+define+SIM, +define+MODELSIM_SIM, -timescale 1ns/1ps]
         vsim_options: [-L, altera_mf_ver, -L, altera_mf]
       verilator:
-        verilator_options: [-Wno-fatal, --trace]
+        verilator_options: [-Wno-fatal, --trace, -O3]
         # Disable `cli_parser` option for now, 1 there is a bug in edalize that
         # needs to get fixed otherwise this fails.  Also, 2 we need a more
         # features in command line parsing for this to work.  For verilator we
@@ -86,7 +86,7 @@ targets:
         vsim_options: [-L, altera_mf_ver, -L, altera_mf]
       verilator:
         verilator_options: [-Wno-fatal, --trace, "-CFLAGS -DMAROCCHINO",
-                             -Gpipeline=\"MAROCCHINO\"]
+                             -Gpipeline=\"MAROCCHINO\", -O3]
         # Disable cli_parser see comment above.
         # cli_parser: managed
     toplevel:
