@@ -1,6 +1,6 @@
 CAPI=2:
 
-name: ::mor1kx-generic:1.1
+name: ::mor1kx-generic:1.2
 description: "Minimal mor1kx simulation environment"
 
 filesets:
@@ -37,6 +37,7 @@ filesets:
       - bench/verilator/tb.cpp: {file_type: cppSource}
     depend:
       - verilator_tb_utils
+      - or1ksim_trace
 
 targets:
   mor1kx_tb: &sim
