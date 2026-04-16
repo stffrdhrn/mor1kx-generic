@@ -226,7 +226,7 @@ Create and compile the source file as follows.
 cd /tmp/openrisc/src
 vim openrisc-asm.s
 
-or1k-elf-gcc -nostartfiles openrisc-asm.s -o openrisc-asm
+or1k-elf-gcc -nostartfiles -nostdlib openrisc-asm.s -o openrisc-asm
 ```
 
 ### Run the program
