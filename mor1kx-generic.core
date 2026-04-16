@@ -12,17 +12,17 @@ filesets:
       - or1k_marocchino
   soc_files:
     files:
-      - rtl/verilog/wb_intercon.vh: {is_include_file: true}
       - rtl/verilog/orpsoc_top.v
-      - rtl/verilog/wb_intercon.v
     file_type: verilogSource
     depend:
       - intgen
       - adv_debug_sys
       - ">=jtag_tap-1.13"
       - ">=uart16550-1.5.4"
-      - ">=wb_intercon-1.0"
       - ">=wb_ram-1.0"
+  wb_intercon_dep:
+    depend: 
+      - ~wb_intercon-1.2
   verilog_tb_files:
     files:
       - bench/verilog/orpsoc_tb.v
@@ -44,8 +44,11 @@ targets:
     filesets:
       - soc_files
       - mor1kx_modules
+      - wb_intercon_dep
       - "!tool_verilator ? (verilog_tb_files)"
       - "tool_verilator ? (verilator_tb_files)"
+    generate:
+      - wb_intercon
     parameters: [clear_ram, pipeline, feature_immu, feature_dmmu, feature_fpu,
                   feature_instructioncache, feature_datacache, feature_debugunit,
                   feature_cmov, feature_ext, option_rf_num_shadow_gpr]
@@ -74,8 +77,11 @@ targets:
     filesets:
       - soc_files
       - marocchino_modules
+      - wb_intercon_dep
       - "!tool_verilator ? (verilog_tb_files)"
       - "tool_verilator ? (verilator_tb_files)"
+    generate:
+      - wb_intercon
     parameters: [clear_ram, pipeline=MAROCCHINO, feature_debugunit, feature_fpu,
                  option_rf_num_shadow_gpr]
     tools:
@@ -95,6 +101,35 @@ targets:
 
   sim: *sim
 
+generate:
+  wb_intercon:
+    generator : wb_intercon_gen
+    parameters:
+      masters:
+        or1k_i:
+          slaves:
+            - mem
+        or1k_d:
+          slaves:
+            - mem
+            - uart
+            - intgen
+        dbg:
+          slaves:
+            - mem
+      slaves:
+        mem:
+          offset : 0
+          size : 0x2000000
+        uart:
+          datawidth : 8
+          offset : 0x90000000
+          size : 8
+        intgen:
+          datawidth : 8
+          offset : 0xe1000000
+          size : 2
+          
 parameters:
   clear_ram:
     datatype   : bool
